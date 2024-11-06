@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procore Zoom Rooms Guide</title>
+    <style>
+        /* Dark Theme Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #E0E0E0;
+            background-color: #1A1A1A;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #E8E8E8;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        h1 {
+            font-size: 4rem;
+            font-weight: 900;
+        }
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #9AC1D9;
+        }
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #7FA8C5;
+        }
+		h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #a4a4a4;
+        }
+		h5 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #CFCFCF;
+        }
+		h6 {
+            font-size: 1.10em;
+            font-weight: 800;
+            color: #a4a4a4;
+        }
+		h7 {
+            font-size: 1.10em;
+            font-weight: 800;
+            color: #CFCFCF;
+        }
+		h8 {		 
+            font-size: 0.5em;
+            font-weight: 600;
+            color: #a4a4a4;
+        }
+        p, li {
+            color: #CFCFCF;
+            font-size: 1rem;
+        }
+        a {
+            color: #4DA8DA;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+            color: #7FBFFF;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3E89A7;
+            color: #FFF;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #6FB3D2;
+            color: #FFF;
+        }
+        .highlight {
+            color: #FFD700;
+            font-weight: bold;
+        }
+		.astr {
+            color: #FF0000;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 40px;
+            background-color: #242424;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #444;
+            margin: 20px 0;
+        }
+		/* TOC Button */
+        .toc-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #4a97f7;
+            color: #FFF;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            z-index: 1000;
+        }
+
+        /* TOC Sidebar */
+        .toc {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 250px;
+            height: 100%;
+            background-color: #1A1A1A;
+            color: #E0E0E0;
+            overflow-y: auto;
+            padding: 20px;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.5);
+            transition: left 0.3s;
+            z-index: 999;
+        }
+
+        .toc h2 {
+            color: #9AC1D9;
+            font-size: 1.25rem;
+            margin-top: 0;
+        }
+
+        .toc ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .toc li {
+            margin: 8px 0;
+        }
+
+        .toc a {
+            color: #4DA8DA;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .toc a:hover {
+            color: #7FBFFF;
+        }
+		
+		    /* Peek Animation */
+        @keyframes tocPeek {
+            0% { left: -250px; }
+            30% { left: 0; }
+            60% { left: -50px; }
+            100% { left: -250px; }
+        }
+
+        /* Apply the animation on page load */
+        .toc.peek {
+            animation: tocPeek 1.5s ease-in-out;
+        }
+
+        /* Open TOC */
+        .toc.open {
+            left: 0;
+			animation: none;
+        }
+
+        /* Close Button */
+        .toc button {
+            background-color: #4a97f7;
+            color: #FFF;
+            border: none;
+            padding: 8px 10px;
+            width: 100%;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.75rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            .button, .toc button {
+                width: 100%;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+	 <!-- Table of Contents Container -->
+    <div id="toc" class="toc peek">
+        <h2>Table of Contents</h2>
+        <ul id="toc-list"></ul>
+        <button onclick="toggleToc()">Close</button>
+    </div>
+
+    <!-- TOC Toggle Button -->
+    <button onclick="toggleToc()" class="toc-button">☰</button>
+	
+    <div class="container">
+        <h1>Procore Zoom Rooms Guide</h1>
+		<p>&nbsp;</p>
+        <h2>How to Start, Join Meetings, and Share Content from the Zoom Controller</h2>
+
+        <h3>Start an Instant Meeting in a Zoom Room</h3>
+        <ul>
+          <li>On the Zoom Rooms controller, tap the <span class="highlight">Home</span> icon on the menu bar.</li>
+            <li>Tap <span class="highlight">New Meeting</span> on the Home screen to start an instant meeting.</li>
+        </ul>
+
+        <img alt="" src="images/image3.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+       
+		<hr>
+
+        <h3>Start a Scheduled Meeting<span class="astr">*</span></h3>
+        <ul>
+          <li>On the Zoom Rooms controller, tap the <span class="highlight">Home</span> icon on the menu bar of the controller.</li>
+            <li>Tap your scheduled topic on the meeting list.</li>
+          	<li>Tap <span class="highlight">Start</span> to start the meeting.</li>
+        </ul>
+		<p><span class="astr">*</span>Meeting rooms must be added to the scheduled calendar event for them to appear on the Zoom Room’s controller.</p>
+		
+	  	<img alt="" src="images/image17.png" style="width: 100%; max-width: 681.50px; height: auto; margin-left: 0.00px; margin-top: -0.09px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		
+		<hr>
+		
+		<h3>Join Someone Else’s Meeting:</h3>
+        <ul>
+          <li>On the Zoom Rooms controller, tap the <span class="highlight">Home</span> icon on the menu bar of the controller.</li>
+            <li>Tap <span class="highlight">Join</span> on the Controller</li>
+            <li>Enter the <span class="highlight">Meeting ID</span>.</li>
+      </ul>
+		
+		<img alt="" src="images/image15.png" style="width: 100%; max-width: 683.5px; height: auto; margin-left: 0; margin-top: 0; transform: rotate(0deg) translateZ(0); -webkit-transform: rotate(0deg) translateZ(0);" title=""
+>
+		<hr>
+
+        <h3>Join a Microsoft Teams Meeting</h3>
+        <p>Share your screen easily by following these steps:</p>
+        <ul>
+            <li>On the Zoom Rooms controller, tap the <span class="highlight">Home</span> icon on the menu bar of the controller.</li>
+            <li>Tap <span class="highlight">Microsoft Teams</span> on the Home screen to join a meeting.</li>
+			<li>Enter the <span class="highlight">Teams Meeting ID</span>.</li>
+        </ul>
+		
+		 <img alt="" src="images/image1.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+       
+		<hr>
+		
+		<h3>Quickly Share Content</h3>
+      <p>If you have your laptop or mobile device with you, you can easily share content in a Zoom Room via share.zoom.us. You may share content without needing to start or join a meeting.</p>
+      <ol>
+            <li>Tap the <span class="highlight">Home</span> icon on the menu bar of the controller</li>
+          	<li>Tap the <span class="highlight">Share Screen</span> icon on the Home scree.</li>
+       	  	<li>Open a web browser on your laptop or mobile device and visit <span class="highlight">share.zoom.us</span>.</li>
+          	<li>Enter the meeting ID or personal link, then click Share <span class="highlight">Screen</span>. You can also click Enter a Sharing Key.</li>
+          	<li>When prompted, allow your web browser to open Zoom</li>
+			<li>Select the screen or application you want to share, then click <span class="highlight">Share</span>.</li>
+</ol>
+		
+<img alt="" src="images/image5.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+       
+		<hr>
+		
+		<h3>Zoom Meeting Controls</h3>
+		
+		<img alt="" src="images/image20.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		
+		<h3>Microsoft Meeting Controls</h3>
+		
+		<img alt="" src="images/image19.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		
+		<h3>Camera Controls</h3>
+		
+		<img alt="" src="images/image12.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		
+		<hr>
+		
+		<p>&nbsp;</p>
+        <h2>Changing the Video Layout of a Zoom Room Display</h2>
+		<p>&nbsp;</p>
+		
+		<img alt="" src="images/image21.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		
+		<p>The Zoom Rooms controller or touch screen lets you choose the video layout that displays on Zoom Rooms displays during a meeting. In Zoom Rooms with one display, tap View on the controller or touch screen to choose the layout.</p>
+		<p>In Zoom Rooms with more than one display, users can choose which screen layout or content is shown on each connected display via the Zoom Rooms controller. Tap View on the controller or touch screen and select a display to choose each layout.</p>
+		<p>&nbsp;</p>
+		
+		<h3>Scenario: Project Kickoff Meeting</h3>
+        <p>In a project kickoff meeting with stakeholders and team members, here’s how each layout may be beneficial:</p>
+		<p>&nbsp;</p>
+        <ul>
+            <li><span class="highlight">Speaker View:</span> The project manager presents the timeline and objectives, keeping attention focused on the speaker as they guide the session.</li>
+			<p>&nbsp;</p>
+			<li><span class="highlight">Thumbnail View:</span> As the meeting progresses, the project manager shares a detailed roadmap while keeping a small view of the speaker in the corner, ensuring everyone stays on track.</li>
+			<p>&nbsp;</p>
+			<li><span class="highlight">Gallery View:</span> During an open discussion, all participants can see each other, fostering collaboration and encouraging input from all team members.</li>
+			<p>&nbsp;</p>
+			<li><span class="highlight">Multi-Speaker View:</span> For a panel discussion with multiple subject matter experts, the layout allows everyone to see all key speakers simultaneously, enhancing engagement.</li>
+			<p>&nbsp;</p>
+        </ul>
+		
+		<h3>Speaker view</h3>
+        <p>In Zoom Rooms with one display, Speaker View displays a large view of the person currently speaking, with a smaller thumbnail of the previous speaker as a picture-within-picture. During screen sharing, the shared screen is in the large display and the thumbnail shows the person who is currently speaking. This view includes Layout Options, where you can choose the size and location of the thumbnail, choose to display the current speaker or shared screen without a thumbnail, and swap the content and current speaker.</p>
+		<p>In Zoom Rooms with more than one display, users can choose which screen layout or content is shown on each connected display via the Zoom Rooms controller. On the chosen display, Speaker View displays a full screen view of the person currently speaking on the chosen display.</p>
+		
+		 <img alt="" src="images/image10.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		
+		<h3>Thumbnail view</h3>
+        <p>Thumbnail View combines the Speaker View with a scaled down version of the Gallery View. A small strip of thumbnails, showing up to eight participants who were the most recent speakers, displays above or beneath a relatively larger view of the active speaker. The position of the thumbnails is controlled by the default display layout configuration and cannot be altered from the Zoom Rooms controller or touch screen interface. A Zoom Rooms administrator can customize the default display layout, including thumbnail position.</p>
+		<p>This view includes Layout Options where you can paginate between participants if there are more than eight, and choose how they are sorted.</p>
+		<p>When screen sharing in Zoom Rooms with one display, the shared screen is displayed in the large view and the thumbnails will show up to eight participants, including the active speaker, and those who were most recently speakers.</p>
+		<p>In Zoom Rooms with more than one display, users can choose which screen layout or content is shown on each connected display via the Zoom Rooms controller. When screen sharing on a chosen, the shared screen is displayed in the large view and the thumbnails will show up to eight participants, including the current speaker, and those who were most recently speakers.</p>
+		
+		 <img alt="" src="images/image18.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		
+		<h3>Gallery View</h3>
+        <p>Gallery View displays up to 25 participants per screen. The active speaker is highlighted in Gallery View. If there are more participants than the per-screen limit, an arrow displays next to the icon. Tap the right arrow to display the next group of participants on the screen, and tap the left arrow to display the previous set.</p>
+		<p>This view includes Layout Options where you can choose how participants are sorted. Gallery View is not available in a Zoom Room with one screen while screen sharing.</p>
+		
+		 <img alt="" src="images/image22.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		
+		<h3>Multi-Speaker view</h3>
+        <p>Multi-speaker view provides meeting participants a more engaging experience, dynamically adapting to current speakers by highlighting and enlarging their video tiles over others, while still providing a view of other participants in a smaller gallery view below. With 4 or fewer participants, gallery view is used instead, but with sufficient participants, up to 4 active speaker(s) will have their video tile enlarged and made the focus of the meeting. Pinning videos is supported with multi-speaker layout, keeping the pinned video in focus, but spotlighting is not supported, as the spotlighted video tile will take control of the video layout for all.</p>
+		
+		 <img alt="" src="images/image8.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		
+		<hr>
+		
+		<p>&nbsp;</p>
+        <h2>Camera Modes</h2>
+		<p>&nbsp;</p>
+
+		<p>Neat Device Camera Modes are specialized settings designed to enhance video conferencing experiences by optimizing how participants are displayed.</p>
+		<p>&nbsp;</p>
+		
+		<h3>Scenario: Hybrid Team Strategy Session</h3>
+        <p>In a hybrid team strategy session where both in-person and remote participants collaborate, here’s how each camera mode may be beneficial:</p>
+        <ul>
+            <li><span class="highlight">Speaker Focus:</span> The session leader presents key strategies, with the camera automatically focusing on the active speaker to maintain engagement.</li>
+			<p>&nbsp;</p>
+			<li><span class="highlight">Auto-Framing:</span> As team members contribute, Auto-framing adjusts to keep everyone visible, ensuring remote participants see the entire group.</li>
+			<p>&nbsp;</p>
+			<li><span class="highlight">Multi-Focus:</span> For discussions with multiple active contributors, this mode highlights several key speakers at once.</li>
+			<p>&nbsp;</p>
+			<li><span class="highlight">Multi-Stream:</span> Different breakout groups present their ideas simultaneously, with each stream captured and displayed for comprehensive feedback.</li>
+			<p>&nbsp;</p>
+        </ul>
+		
+		<h3>Speaker Focus</h3>
+        <p>When Speaker Focus is enabled, the camera will automatically switch focus between meeting room participants when they speak. When two participants are actively speaking at the same time, the stream may momentarily show them in the same view before keeping individual focus on the last speaking participant.</p>
+		<p>&nbsp;</p>
+		<h4>Limitation with Speaker Focus</h4>
+        <ul>
+              <li>Speaker Focus is only available in rooms with a Neat Bar Pro or Neat Bar 2.</li>
+              <li>Speaker Focus continuously switches focus to different participants and the continuous motion may not be a preferred experience for some participants. In these circumstances, Multi-Stream may be more desirable.</li>
+	  </ul>
+		
+		<p>&nbsp;</p>
+				
+	  <h3>Auto-Framing</h3>
+        <p>When this option is chosen, the camera will automatically focus on the meeting room participants and group them together. If participants move around or leave/enter the meeting room, the framing will be adjusted to accommodate those changes (see Figures 1 and 2).</p>
+		<img alt="" src="images/image11.jpg" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+	  <br>Figure 1: In the first two frames, there is one individual and auto framing tracks their movement; as a new participant joins, auto framing now groups them together.
+		<img alt="" src="images/image13.jpg" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		<br>Figure 2: Three participants framed together in group auto framing
+		<p>&nbsp;</p>
+		
+		<h3>Multi-focus Framing</h3>
+        <p>When Multi-focus framing is enabled, Neat devices can frame each participant and place them side-by-side, as seen in Figure 3. Compared to the image in Figure 2, the table is no longer taking up a large amount of space on the foreground and instead, a closer, equally-sized view of the participants is achieved.</p>
+		<img alt="" src="images/image4.jpg" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		<br>Figure 3: With Multi-focus framing, participants are shown in more detail
+		<br>This feature allows meeting room participants to be viewed better in gallery view by remote users.
+	  <img alt="" src="images/image14.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		<br>Figure 4: Multi-focus framing in Gallery view
+		<p>&nbsp;</p>
+		
+	  <h3>Multi-Stream</h3>
+        <p>The Multi-Stream feature brings about a set of new changes in how we view and frame participants in the meeting room.</p>
+		
+		<h4>Voice localization on Neat Bar Pro</h4>
+		
+		<p>If you are using a room with a Neat Bar Pro, the active speaker in a room can always be highlighted while using Multi-Stream in Zoom. In “Gallery View” there will be a green rectangle around the frame that displays the camera stream that contains the active speaker. In Speaker View and Thumbnail View the camera stream that contains the active speaker will be shown instead of always showing the overview camera.
+		<br>Note: Only the overview camera is transmitted as 720p/1080p. The additional streams are transmitted as 360p, thus the Speaker and Thumbnail View may show lower resolution than expected. (Zoom and Neat are working to address this in a future release.)</p>
+		
+		<h3>Multi-Stream with 2 or more participants in the meeting room</h3>
+        <p>If there are two or more participants in the meeting room, the Multi-Stream feature provides a brand new experience for the remote participants in the meeting room. The meeting room is split over three separate streams: the first stream providing a full-view of the meeting room; the second and third streams providing individually framed views of the participants in the meeting room (e.g. with 2 people, 1 in each frame; with 4 people, 2 in each frame and so on).
+		<br>
+		Figure 5 and 6 provide examples of how this is viewed by others in Gallery mode.
+	  	<br>In Figure 5, the Multi-Stream feature is enabled in the room called ‘Sunrise’ and there are three participants in the meeting room. In the Gallery view, the Neat device (Sunrise) sends three streams to Zoom:</p>
+		<ul>
+            <li>Sunrise: first stream showing the full view of the meeting room</li>
+       	  <li>Sunrise 1: second stream showing two of the meeting room participants in multi-focus/individually framed view</li>
+            <li>Sunrise 2: third stream showing the third meeting room participant.</li>
+        </ul>
+		<img alt="" src="images/image2.jpg" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		<br>Figure 5: Multi-Stream with 6 participants, viewed over 3 frames with Sunrise, Sunrise 1, and Sunrise 2
+		<p>In Figure 6, there are 6 participants in the meeting room. Similar to Figure 5, there are three streams sent from Neat to Zoom: a) first stream shows full view of the meeting room; b) second stream shows multi-focus/individually-framed view of three participants and c) third stream shows multi-focus/individually-framed participants of the remaining three participants.</p>
+		<img alt="" src="images/image7.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		<br>Figure 6: Multi-Stream with 6 participants, viewed over three frames in Gallery mode
+		
+		<p>&nbsp;</p>
+		<h4>Limitation with Multi-Stream in Speaker view</h4>		
+		<ul>
+            <li>When Multi-Stream mode is chosen, the experience can vary depending on how the remote users are viewing the particular meeting room.</li>
+          	<li>The Multi-Stream feature is best viewed in the Gallery mode as the viewers are able to see all three streams from the Neat device (as seen in Figures 5 and 6).</li>
+            <li>However, if the meeting room is viewed in Active Speaker mode, Zoom will only select the full-screen room view as the loudest speaker, and not the individual stream that consists of a close-up view of the speaker.<p>IMPORTANT: This is only a limitation for the current iteration of the Multi-Stream feature. Zoom and Neat plan to improve this experience in future releases. If your meetings are usually viewed in Active Speaker mode (as opposed to Gallery mode), the ‘Multi-focus framing’ will provide a better experience over Multi-Stream.</p></li>
+        </ul>
+		<p>In Figure 7, the meeting room has 5 participants and Multi-Stream mode is chosen. As you can observe, when the viewer chooses ‘Speaker’ mode, the full room-view is shown as the Active Speaker, rather than the close-up individually-framed view.<br><img alt="" src="images/image2.jpg" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""><br>Figure 7: Multi-Stream with 5 participants, viewed in Speaker mode (full room-view is shown as loudest speaker)</p>
+		<hr>
+		
+		<p>&nbsp;</p>
+        <h2>Zoom AI Features: AI Companion</h2>
+		<p>Zoom AI Features are advanced tools designed to enhance productivity during meetings. These features streamline the meeting process, making it easier to capture and share critical information efficiently.</p>
+	
+		<p>&nbsp;</p>
+		
+		<h3>Scenario: Quarterly Business Reviewg</h3>
+        <p>During a Quarterly Business Review (QBR) with executives and team leaders, here’s how Zoom’s AI Companion may be beneficial:</p>
+        <ul>
+            <li><span class="highlight">Meeting Summary:</span> After the meeting, the AI automatically generates a concise summary, capturing key points like revenue growth, project updates, and action items, which can then be shared with all attendees for easy reference.</li>
+			<p>&nbsp;</p>
+			<li><span class="highlight">AI Companion:</span>Throughout the meeting, the AI Companion assists by generating live insights and helping with note-taking, ensuring that no critical details are missed, and allowing participants to focus more on the discussion rather than manual documentation.</li>
+			<p>&nbsp;</p>
+        </ul>
+		
+		<h3>Meeting Summary</h3>
+        <p>The Zoom Meeting Summary feature allows users to generate AI-powered summaries of their meetings. These summaries are accessible via the Zoom desktop or mobile app and can be shared automatically with participants through Zoom Team Chat or email.</p>
+		
+		<h5>Start Meeting Summary as the host in a Zoom Room</h5>
+        <ol>
+            <li>Start a meeting from the Zoom Room.</li>
+			<li>On the Zoom Rooms controller or touch display, tap <span class="highlight">AI Companion</span>.</li>
+			<li>Tap <span class="highlight">Start Summary</span>.</li>
+			<li>Enter your email address to receive the summary at the end of the meeting.<br>The meeting summary will begin to be generated, and participants will see a notification informing them that Meeting Summary is active.</li>
+			<li>On the Zoom Rooms controller or touch display, tap <span class="highlight">AI Companion</span>, then tap <span class="highlight">Start Summary</span> to end generating the summary of the current meeting.</li>
+        </ol>
+	  <img alt="" src="images/image9.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		
+		<p>&nbsp;</p>
+		
+	  <h5>How to view the meeting summary</h5>
+		<p>If the host enables sharing, meeting participants can access the summary through email and Zoom Team Chat. Anyone who receives the meeting summary may save and share it with apps and others. The account owner can access the meeting summary.</p>
+		
+	  <h7>View email summary</h7>
+        <p>Once a meeting summary is available, a copy of it is provided through email. Summaries for meetings that have continuous meeting chat disabled are only shared through email.</p>
+        <ol>
+            <li>Access your email inbox.</li>
+			<li>Find and select the email with the same subject as the meeting topic to view the summary.</li>
+			<li>(Optional) From the body of the email, click <span class="highlight">Edit Summary Here</span>.<br>You will be prompted to sign in to your Zoom account (if you are not already) to continue editing the summary through the web portal.<br><span class="highlight">Note:</span> Only the host has the <span class="highlight">Edit Summary Here</span> option.</li>
+		</ol>
+	  <h7>Notes:</h7>
+		<ul>
+			<li>Unauthenticated users will not receive an email summary, as there was no email address associated with their presence in the meeting.</li>
+			<li>Participants joining the meeting ad hoc (through the in-meeting contact invitation or sharing the join link) will not receive the summary, as they were not on the original invitee list.</li>
+        </ul>
+		
+		<h7>Access summary through Team Chat</h7>
+        <p>The meeting summary is only available through Zoom Team Chat if the meeting was scheduled with continuous meeting chat enabled.</p>
+        <ol>
+            <li>Sign in to the Zoom desktop app.</li>
+			<li>Click the <span class="highlight">Team Chat</span> tab</li>
+		  <li>Find and select the group chat with the same name as the meeting topic.</li>
+			<li>Search for the message from Zoom Meetings then click View Details.</li>
+			<li>(Optional) Click <span class="highlight">Edit</span> to modify the summary, then click <span class="highlight">Save</span>.<br><span class="highlight">Note:</span> Only the host can edit the summary.</li>
+			<li>(Optional) Click <span class="highlight">Delete</span> to remove the summary.<br><span class="highlight">Note:</span> Only the host can delete a summary. This action cannot be undone and the deleted summary cannot be restored to the chat channel.</li>
+		</ol>
+		
+		<p>&nbsp;</p>
+	  <h6>Limitations of Meeting Summary with AI Companion</h6>
+		<ul>
+            <li>Only the meeting host and co-host can start or stop the meeting summary through the in-meeting controls.<br><span class="highlight">Note:</span> Starting and stopping the summary will still result in a meeting summary of the discussion while the feature was enabled.</li>
+			<li>Meeting summarization only begins when the host clicks Start Summary, unless the host has enabled the web setting to automatically start Meeting Summary.</li>
+			<li>Use of Meeting Summary with AI Companion is not available in all countries.</li>
+			<li>Meeting Summary with AI Companion is currently not available within Breakout Rooms.</li>
+		</ul>
+		
+		<p>&nbsp;</p>
+		
+  	  <h5>Allow Participants to Ask In-Meeting Questions with the AI Companion<span class="astr">*</span></h5>
+		<p>Enable Meeting Questions with the AI Companion to allow participants to get real-time answers during Zoom meetings when joining from the Zoom Desktop app on their laptops. The AI Companion can clarify points, provide additional information, or summarize content discussed. This feature enhances engagement by enabling participants to interact with the AI without disrupting the flow of the meeting, ensuring that everyone stays informed and aligned.<br><span class="astr">*</span><strong>Meeting hosts in Zoom Rooms can only start or stop AI Companion, enabling participants to ask questions when joining from the Zoom Desktop app on their laptops.</strong></p>
+		
+		<p>&nbsp;</p>
+		<h6>Limitations of Meeting Summary with AI Companion</h6>
+		<ul>
+            <li>Only the <span class="highlight">meeting host</span> can start or stop AI Companion through the in-meeting controls.</li>
+			<li>Questions can only be answered if the content was discussed while AI Companion is active in the current meeting.</li>
+			<li><span class="highlight">Meeting hosts in Zoom Rooms can only start or stop AI Companion.</span></li>
+			<li>This feature is not supported in Breakout Rooms.</li>
+		</ul>
+		
+		<h7>Start Meeting Questions as the host</h7>
+      <p>When the meeting starts, the host will need to manually start AI Companion so that it is available to in-meeting participants.</p>
+        <ol>
+            <li>Start a meeting as the host in a Zoom Room.</li>
+			<li>In the meeting control toolbar, tap <span class="highlight">AI Companion</span>.<br>The AI Companion panel will open.</li>
+		  	<li>Tap <span class="highlight">Start meeting questions</span>.</li>
+			<li>Under <span class="highlight">Options</span>, select which group of meeting participants can interact with AI Companion:</li>
+				<ul>
+					<li><strong>All participants</strong>: Allows all participants to ask questions about all discussion since AI Companion is active.</li>
+		    		<li><strong>All participants only from when they join</strong>: Allows all participants to ask questions about discussion since they joined the current meeting.</li>
+			 		<li><strong>Only hosts</strong>: Allow only the original host, alternative host, and users with host privileges assigned before the meeting starts to ask questions about all discussions since AI Companion is active.</li>
+			</ul>	
+		</ol>
+	  <img alt="" src="images/image16.png" style="width: 100%; max-width: 681.55px; height: auto; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+		<hr>
+		
+		<p>&nbsp;</p>
+		<h2>Meeting Room Support</h2>
+		
+		<h3>Reach out to IT Support if you need assistance.</h3>
+	  <p>Use the following methods to reach out to support if you are having trouble in a meeting room.</p>
+		<ul>
+			<li><span class="highlight">Slack:</span> Message <span class="highlight">@Bolt</span> or join <span class="highlight">#help-it-support-questions</span></li>
+			<li><span class="highlight">Okta:</span> Click the<span class="highlight">IT Service Desk</span> tile in Okta or use this direct <a href="https://www.google.com/url?q=https://procoretech.atlassian.net/servicedesk/customer/portal/38/group/203/create/4973&sa=D&source=editors&ust=1730831878638539&usg=AOvVaw28N4CSmyqHrktofC7ddeTZ">link</a></li>
+			<li><span class="highlight">Email:</span> itsupport@procore.com</li>
+		</ul>
+		
+		<p>&nbsp;</p>
+		
+	<h8> — Guide Created By Devin Dupre</h8>
+		
+    </div>
+	
+	<script>
+        // Toggle the visibility of the TOC
+        function toggleToc() {
+            const toc = document.getElementById("toc");
+            toc.classList.toggle("open");
+            toc.classList.remove("peek"); // Remove peek class when manually toggled
+        }
+
+        // Close TOC if clicking outside it and not on the TOC button
+        document.addEventListener("click", (event) => {
+            const toc = document.getElementById("toc");
+            const tocButton = document.querySelector(".toc-button");
+            const isTocOpen = toc.classList.contains("open");
+
+            if (isTocOpen && !toc.contains(event.target) && event.target !== tocButton) {
+                toc.classList.remove("open");
+            }
+        });
+
+        // Generate TOC dynamically
+        document.addEventListener("DOMContentLoaded", () => {
+            const tocList = document.getElementById("toc-list");
+            const headings = document.querySelectorAll("h2, h3");
+
+            headings.forEach((heading) => {
+                if (heading.textContent.trim() === "Table of Contents") return;
+
+                if (!heading.id) {
+                    heading.id = heading.textContent.trim().toLowerCase().replace(/\s+/g, "-");
+                }
+
+                const listItem = document.createElement("li");
+                const link = document.createElement("a");
+                link.href = `#${heading.id}`;
+                link.textContent = heading.textContent;
+
+                link.addEventListener("click", () => {
+                    document.getElementById("toc").classList.remove("open");
+                });
+
+                listItem.appendChild(link);
+                if (heading.tagName === "H3") {
+                    listItem.style.paddingLeft = "15px";
+                }
+                tocList.appendChild(listItem);
+            });
+        });
+        
+        // Remove the peek animation class after it runs
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                document.getElementById("toc").classList.remove("peek");
+            }, 1500); // Remove after animation duration
+        });
+    </script>
+</body>
+</html>
